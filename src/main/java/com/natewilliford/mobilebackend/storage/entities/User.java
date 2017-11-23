@@ -1,6 +1,5 @@
 package com.natewilliford.mobilebackend.storage.entities;
 
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -12,7 +11,9 @@ import java.util.List;
 public class User {
   @Id Long id;
   public String displayName;
-  @Index public String email;
+  @Index
+  public String email;
+  public String hashedPassword;
 
   public List<Device> devices;
 

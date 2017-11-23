@@ -1,19 +1,15 @@
 package com.natewilliford.mobilebackend.server;
 
 import com.google.appengine.api.datastore.QueryResultIterator;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.Result;
 import com.natewilliford.mobilebackend.storage.entities.Device;
 import com.natewilliford.mobilebackend.storage.entities.User;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @SuppressWarnings("serial")
 public class MainServlet extends HttpServlet {
@@ -34,9 +30,14 @@ public class MainServlet extends HttpServlet {
     Device device = new Device();
     device.uniqueDeviceId = "23234";
     user.devices.add(device);
+
+    Device device2 = new Device();
+    device2.uniqueDeviceId = "abcded";
+    user.devices.add(device2);
+
     ObjectifyService.ofy().save().entity(user).now();
     writer.println("User id: " + user.getId());
-    writer.println("device: " + device.getId());
+    writer.println("device: " + device.uniqueDeviceId);
 
 
     QueryResultIterator<User> it = ObjectifyService.ofy().load().type(User.class).filter("devices.uniqueDeviceId = ", "23234").iterator();
