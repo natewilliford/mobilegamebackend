@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.common.base.Strings;
+import com.google.inject.Singleton;
+import com.google.inject.servlet.RequestScoped;
 import com.googlecode.objectify.ObjectifyService;
 import com.natewilliford.mobilebackend.server.api.ApiUser;
+import com.natewilliford.mobilebackend.server.api.Auth;
 import com.natewilliford.mobilebackend.server.api.GenericRequest;
 import com.natewilliford.mobilebackend.server.api.GenericResponse;
 import com.natewilliford.mobilebackend.storage.entities.Device;
@@ -21,14 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
+@Singleton
 public class RegisterServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    ObjectifyService.register(User.class);
-    ObjectifyService.register(Device.class);
+//    ObjectifyService.register(User.class);
+//    ObjectifyService.register(Device.class);
 
 //    req.getAttribute()
     String jsonRequest = req.getParameter("json");
@@ -68,10 +71,12 @@ public class RegisterServlet extends HttpServlet {
       ObjectifyService.ofy().save().entity(user).now();
 
 
+      String clientUserId = Auth.getClientUserId(user.getId());
       ApiUser apiUser = new ApiUser();
-      apiUser.userId = user.getId().toString();
-
+      apiUser.userId = clientUserId;
+      apiUser.email = user.email;
       registerResponse.user = apiUser;
+      registerResponse.token = Auth.generateToken(clientUserId);
 
       writer.println(mapper.writeValueAsString(registerResponse));
     } catch (RuntimeException e) {
@@ -119,4 +124,5 @@ class RegisterRequest extends GenericRequest {
 
 class RegisterResponse extends GenericResponse {
   public ApiUser user;
+  public String token;
 }
