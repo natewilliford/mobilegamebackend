@@ -36,6 +36,8 @@ public class LoginServlet extends HttpServlet {
 
     String jsonRequest = req.getParameter("json");
 
+    System.out.println(jsonRequest);
+
     ObjectMapper mapper = new ObjectMapper();
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
@@ -44,6 +46,9 @@ public class LoginServlet extends HttpServlet {
 
     String email = loginRequest.email.replaceAll("\\s+", "").toLowerCase();
     String password = loginRequest.password.replaceAll("\\s+", "");
+
+    System.out.println("email: " + email);
+    System.out.println("password: " + password);
 
     if (Strings.isNullOrEmpty(email) || Strings.isNullOrEmpty(password)) {
 
@@ -58,6 +63,10 @@ public class LoginServlet extends HttpServlet {
       QueryResultIterator<User> existingUsersIterator = ofy().load().type(User.class).filter("email = ", email).iterator();
       if (existingUsersIterator.hasNext()) {
         User user = existingUsersIterator.next();
+
+        System.out.println(BCrypt.hashpw(password, BCrypt.gensalt(12)));
+        System.out.println(user.hashedPassword);
+
         if (BCrypt.checkpw(password, user.hashedPassword)) {
 
 //          loginResponse.success = true;
