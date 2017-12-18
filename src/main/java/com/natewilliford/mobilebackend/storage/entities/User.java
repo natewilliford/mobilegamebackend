@@ -17,6 +17,8 @@ public class User {
 
   public List<Device> devices;
 
+  public Inventory inventory = new Inventory();
+
   public User() {
     devices = new ArrayList<>();
   }

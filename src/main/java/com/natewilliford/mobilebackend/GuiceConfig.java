@@ -8,6 +8,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.natewilliford.mobilebackend.ofy.OfyService;
+import com.natewilliford.mobilebackend.server.BuyServlet;
 import com.natewilliford.mobilebackend.server.LoginServlet;
 import com.natewilliford.mobilebackend.server.RegisterServlet;
 import com.natewilliford.mobilebackend.server.SyncServlet;
@@ -22,6 +23,7 @@ public class GuiceConfig extends GuiceServletContextListener {
       serve("/register").with(RegisterServlet.class);
       serve("/login").with(LoginServlet.class);
       serve("/sync").with(SyncServlet.class);
+      serve("/buy").with(BuyServlet.class);
     }
   }
 
